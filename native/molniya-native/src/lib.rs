@@ -18,6 +18,51 @@ pub fn native_version() -> String {
 
 uniffi::setup_scaffolding!();
 
+#[derive(Debug, uniffi::Error)]
+pub enum ParseError {
+    InvalidFormat { detail: String },
+    MissingPort { detail: String },
+}
+
+impl std::fmt::Display for ParseError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            ParseError::InvalidFormat { detail } => {
+                write!(f, "salah format bos: {}", detail)
+            }
+
+            ParseError::MissingPort { detail } => {
+                write!(f, "port kosong ya bos: {}", detail)
+            }
+        }
+    }
+}
+
+impl std::error::Error for ParseError {}
+
+#[uniffi::export]
+pub fn parse_target(input: String) -> Result<String, ParseError> {
+    if input.is_empty() {
+        return Err(ParseError::InvalidFormat {
+            detail: "Input kosong".to_string(),
+        });
+    }
+    let (host, port) = input.split_once(':').ok_or(ParseError::InvalidFormat {
+        detail: format!("Format input:{} salah bos, harusnya host:port", input),
+    })?;
+
+    if port.trim().is_empty() {
+        return Err(ParseError::MissingPort {
+            detail: "Port kosong".to_string(),
+        });
+    }
+
+    Ok(format!(
+        "Host valid bos, ini hostnya {}, port juga valid ya bos: {}",
+        host, port
+    ))
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

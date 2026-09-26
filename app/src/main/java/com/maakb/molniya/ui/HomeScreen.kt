@@ -15,7 +15,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import uniffi.molniya_native.ParseException
 import uniffi.molniya_native.nativeVersion
+import uniffi.molniya_native.parseTarget
 
 @Composable
 fun HomeScreen(onNavigate: (HomeDestination) -> Unit) {
@@ -25,19 +27,34 @@ fun HomeScreen(onNavigate: (HomeDestination) -> Unit) {
         "yah gagal bhanggggggg: ${e.message}"
     }
 
-    Text(
-        text = "Engine Core Version: $versiRust",
-        style = MaterialTheme.typography.titleMedium,
-        color = MaterialTheme.colorScheme.primary
-    )
+    val inputUji = "nasgortutupyabos.com"
 
-    Spacer(modifier = Modifier.height(32.dp))
+    val hasilUji = try {
+        parseTarget(inputUji)
+    } catch (e: ParseException.InvalidFormat) {
+        "Rust Menolak (Format Salah): ${e.detail}"
+    } catch (e: ParseException.MissingPort) {
+        "Rust Menolak (Port Kosong): ${e.detail}"
+    } catch (e: Exception) {
+        "Error bos: ${e.message}"
+    }
 
     Column(
         modifier = Modifier.fillMaxSize().padding(16.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        Text(
+            text = "Engine Core Version: $versiRust",
+            style = MaterialTheme.typography.titleMedium,
+            color = MaterialTheme.colorScheme.primary
+        )
+        Text(
+            text = "Status: $hasilUji",
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.error
+        )
+        Spacer(modifier = Modifier.height(32.dp))
         ElevatedButton(
             onClick = { onNavigate(HomeDestination.PAYLOAD_INSPECTOR) },
             modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
