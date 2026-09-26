@@ -7,10 +7,20 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.maakb.molniya.feature.inspector.ui.PayloadInspectorScreen
+import com.maakb.molniya.feature.lab.ui.PacketInspectorScreen
+import com.maakb.molniya.feature.tunnel.ui.TunnelClientScreen
+import com.maakb.molniya.ui.HomeDestination
+import com.maakb.molniya.ui.HomeScreen
 import com.maakb.molniya.ui.theme.MolniyaTheme
 
 class MainActivity : ComponentActivity() {
@@ -19,11 +29,8 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             MolniyaTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
+                Surface {
+                    MolniyaApp()
                 }
             }
         }
@@ -31,17 +38,26 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
+fun MolniyaApp() {
+    var currentScreen by remember { mutableStateOf<HomeDestination?>(null) }
+    when (currentScreen) {
+        null -> {
+            HomeScreen(onNavigate = {
+                destination -> currentScreen = destination
+            })
+        }
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    MolniyaTheme {
-        Greeting("Android")
+        HomeDestination.PAYLOAD_INSPECTOR -> {
+            PayloadInspectorScreen(onBackClick = {currentScreen = null})
+        }
+
+        HomeDestination.PACKET_INSPECTOR -> {
+            PacketInspectorScreen(onBackClick = {currentScreen = null})
+        }
+
+        HomeDestination.TUNNEL_CLIENT -> {
+            TunnelClientScreen(onBackClick = {currentScreen = null})
+        }
     }
+
 }
