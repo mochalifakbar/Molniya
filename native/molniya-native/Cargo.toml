@@ -1,0 +1,11 @@
+[package]
+name = "molniya-native"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+uniffi = { version = "0.32.1", features = ["cli"] }
+uniffi_bindgen = "0.32.2"

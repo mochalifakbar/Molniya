@@ -4,6 +4,7 @@
 
 .idea/
 *.iml
+.vscode/
 
 # ==================================================
 # Gradle & Build
@@ -41,6 +42,10 @@ local.properties
 captures/
 .externalNativeBuild/
 .cxx/
+/native/molniya-native/Cargo.lock
+/native/molniya-native/target/
+app/src/main/java/uniffi/
+app/src/main/jniLibs/
 
 # ==================================================
 # Android Build Artifacts
