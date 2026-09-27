@@ -11,13 +11,19 @@ import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import uniffi.molniya_native.AppCallback
 import uniffi.molniya_native.ParseException
 import uniffi.molniya_native.nativeVersion
 import uniffi.molniya_native.parseTarget
+import uniffi.molniya_native.triggerCallback
 
 @Composable
 fun HomeScreen(onNavigate: (HomeDestination) -> Unit) {
@@ -39,6 +45,8 @@ fun HomeScreen(onNavigate: (HomeDestination) -> Unit) {
         "Error bos: ${e.message}"
     }
 
+    var kasihSayangAtminRust by remember { mutableStateOf("Belum ada pesan ya bos dari atmin rust") }
+
     Column(
         modifier = Modifier.fillMaxSize().padding(16.dp),
         verticalArrangement = Arrangement.Center,
@@ -55,6 +63,30 @@ fun HomeScreen(onNavigate: (HomeDestination) -> Unit) {
             color = MaterialTheme.colorScheme.error
         )
         Spacer(modifier = Modifier.height(32.dp))
+        Text(
+            text = "Status Pesan:",
+            style = MaterialTheme.typography.titleMedium
+        )
+        Text(
+            text = kasihSayangAtminRust,
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.tertiary
+        )
+        Spacer(modifier = Modifier.height(32.dp))
+        ElevatedButton(
+            onClick = {
+                val myCallback = object : AppCallback {
+                    override fun onEvent(message: String) {
+                        kasihSayangAtminRust = message
+                    }
+                }
+
+                triggerCallback(myCallback)
+            },
+            modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
+        ) {
+            Text("Test Callback (Rust Panggil Kotlin)")
+        }
         ElevatedButton(
             onClick = { onNavigate(HomeDestination.PAYLOAD_INSPECTOR) },
             modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
