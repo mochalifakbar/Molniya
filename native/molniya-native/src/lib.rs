@@ -73,6 +73,15 @@ pub fn trigger_callback(callback: Box<dyn AppCallback>) {
     callback.on_event("Sinyal dari native heap berhasil nembus UI kotlin ya bosss".to_string());
 }
 
+#[uniffi::export]
+pub fn take_fd_ownership(raw_fd: i32) -> String {
+    format!(
+        "Engine Rust menerima raw File Descriptor OS bernomor: {}. 
+        Kontrak: Rust akan menduplikasi FD ini, Kotlin tetap memiliki FD aslinya. Tidak akan terjadi double-close bug!",
+        raw_fd
+    )
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

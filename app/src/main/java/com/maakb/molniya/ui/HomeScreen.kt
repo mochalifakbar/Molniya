@@ -23,6 +23,7 @@ import uniffi.molniya_native.AppCallback
 import uniffi.molniya_native.ParseException
 import uniffi.molniya_native.nativeVersion
 import uniffi.molniya_native.parseTarget
+import uniffi.molniya_native.takeFdOwnership
 import uniffi.molniya_native.triggerCallback
 
 @Composable
@@ -86,6 +87,17 @@ fun HomeScreen(onNavigate: (HomeDestination) -> Unit) {
             modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
         ) {
             Text("Test Callback (Rust Panggil Kotlin)")
+        }
+        Spacer(Modifier.height(32.dp))
+        ElevatedButton(
+            onClick = {
+                val dummyVPNFD = 15
+                val responseRust = takeFdOwnership(dummyVPNFD)
+                kasihSayangAtminRust = responseRust
+            },
+            modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
+        ) {
+            Text("Simulasi Transfer FD")
         }
         ElevatedButton(
             onClick = { onNavigate(HomeDestination.PAYLOAD_INSPECTOR) },
