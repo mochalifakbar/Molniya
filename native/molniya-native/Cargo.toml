@@ -9,3 +9,8 @@ crate-type = ["cdylib", "rlib"]
 [dependencies]
 uniffi = { version = "0.32.1", features = ["cli"] }
 uniffi_bindgen = "0.32.2"
+tokio = { version = "1", features = ["full"] }
+etherparse = "0.21.0"
+bytes = "1"
+tracing = "0.1"
+socket2 = { version = "0.5", features = ["all"] }
